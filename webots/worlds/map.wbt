@@ -1,0 +1,77 @@
+#VRML_SIM R2022a utf8
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.2312102324784676 0.19342636528594415 0.9534820761868161 1.7949724184967257
+  position 0.9428477762704264 -4.7849195207827835 2.8562838067516063
+  follow "e-puck"
+  followType "None"
+}
+Background {
+  skyColor [
+    0.180392 0.203922 0.211765
+    0 0 0
+    0 0 0
+    0 0 0
+  ]
+}
+RectangleArena {
+  floorSize 2 2
+  floorAppearance Parquetry {
+    type "light strip"
+  }
+}
+DEF epuck E-puck {
+  translation 0.496417 0.290586 0
+  rotation 0 0 1 0.3927003061004253
+  controller "epuck_mapping"
+  supervisor TRUE
+}
+DEF epuck E-puck {
+  translation 0.216746 -0.771716 0
+  rotation 0 0 1 2.3561996938995744
+  name "e-puck(1)"
+  controller "epuck_mapping"
+  supervisor TRUE
+}
+DEF epuck E-puck {
+  translation -0.694423 0.649556 0
+  rotation 0 0 0.9999999999999999 -0.6545003061004253
+  name "e-puck(2)"
+  controller "epuck_mapping"
+  supervisor TRUE
+}
+WoodenBox {
+  translation 0 0 0.1
+  size 0.2 0.2 0.2
+}
+WoodenBox {
+  translation -0.67 -0.58 0.05
+  name "wooden box(1)"
+  size 0.1 0.1 0.1
+}
+WoodenBox {
+  translation 0.57 0.7 0.05
+  name "wooden box(2)"
+  size 0.1 0.1 0.1
+}
+Wall {
+  translation -0.55 0.25 0
+  size 0.03 0.3 0.3
+}
+Wall {
+  translation 0.31 -0.39 0
+  name "wall(1)"
+  size 0.03 0.3 0.3
+}
+Wall {
+  translation 0.07 -0.38 0
+  name "wall(2)"
+  size 0.5 0.03 0.3
+}
+Wall {
+  translation 0.112163 0.51449 0
+  rotation 0 0 1 -0.6544996938995746
+  name "wall(3)"
+  size 0.5 0.03 0.3
+}
