@@ -1,5 +1,5 @@
 {
-    "_comment": "Values is radians; source: https://cyberbotics.com/doc/guide/epuck#devices-orientations",
+    "_comment": "Values in radians; source: https://cyberbotics.com/doc/guide/epuck#devices-orientations",
     "ps0": 1.27,
     "ps1": 0.77,
     "ps2": 0,
