@@ -43,3 +43,20 @@ def obstacle_detected(distance_sensors_values):
 
 def calc_rotation_time(degress):
     return abs(radians(degress)) / MAX_ROTATION_SPEED
+
+
+def epuck_to_meters(sensor_output: int) -> float: 
+    """
+    Convert epuck robot sensor output value to meters 
+    
+    param::sensor_output:: sensor output value
+    return:: distance in meters 
+    
+    """
+    
+    if sensor_output >= 3474:
+        return -(sensor_output-4095)/124200
+    elif sensor_output < 34:
+        return 0.07
+    else:
+        return 19.84698335/(sensor_output + 281.80449003)
