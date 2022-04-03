@@ -2,15 +2,21 @@
 
 from controller import Supervisor  # type: ignore
 
+import requests
+
 from utils import (
-    initialize_devices, get_distance_sensors, get_motors, get_sensors_values
+    initialize_devices, get_distance_sensors, get_motors, get_sensors_values,
+    epuck_to_meters
 )
 from action import avoid_obstacles
 from config import DATA_ENDPOINT
 
 
 def send_data(url, data):
-    pass
+    try:
+        requests.post(url, json=data)
+    except Exception as e:
+        print(e)
 
 
 def run(robot, timestep):
@@ -37,10 +43,13 @@ def run(robot, timestep):
             "robot_position": robot_position
         }
         data.update({
-            "distance_sensors": distance_sensors_values
+            "distance_sensors": {
+                sensor: epuck_to_meters(value)
+                for sensor, value in distance_sensors_values.items()
+            }
         })
 
-        send_data(DATA_ENDPOINT, data)
+        send_data(DATA_ENDPOINT.format(name=robot_name), data)
 
         avoid_obstacles(
             robot, timestep, left_motor, right_motor, distance_sensors_values
