@@ -1,4 +1,8 @@
-DATA_ENDPOINT = ""
+HOST = "localhost"
+PORT = 8000
+
+# e-puck0, e-puck1, e-puck2, ...
+DATA_ENDPOINT = f"{HOST}:{PORT}" + "/robot/{name}/distance-sensors/"
 
 # https://cyberbotics.com/doc/guide/epuck#e-puck-model
 

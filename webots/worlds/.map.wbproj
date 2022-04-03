@@ -10,4 +10,7 @@ globalOptionalRendering: DistanceSensorRays
 consoles: Console:All:All
 renderingDevicePerspectives: e-puck(1):camera;1;1;0;0
 renderingDevicePerspectives: e-puck(2):camera;1;1;0;0
+renderingDevicePerspectives: e-puck0:camera;0;1;0.0107595;0.126516
+renderingDevicePerspectives: e-puck1:camera;1;1;0;0
+renderingDevicePerspectives: e-puck2:camera;1;1;0;0
 renderingDevicePerspectives: e-puck:camera;0;1;0.0107595;0.126516

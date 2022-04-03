@@ -2,9 +2,9 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.2312102324784676 0.19342636528594415 0.9534820761868161 1.7949724184967257
-  position 0.9428477762704264 -4.7849195207827835 2.8562838067516063
-  follow "e-puck"
+  orientation -0.43715078964694143 0.43824602216128894 0.7853913745202851 1.8076283244563653
+  position 0.17568991990455218 -3.7738198350068846 6.2803145562273945
+  follow "e-puck0"
   followType "None"
 }
 Background {
@@ -24,20 +24,21 @@ RectangleArena {
 DEF epuck E-puck {
   translation 0.496417 0.290586 0
   rotation 0 0 1 0.3927003061004253
+  name "e-puck0"
   controller "epuck_mapping"
   supervisor TRUE
 }
 DEF epuck E-puck {
   translation 0.216746 -0.771716 0
   rotation 0 0 1 2.3561996938995744
-  name "e-puck(1)"
+  name "e-puck1"
   controller "epuck_mapping"
   supervisor TRUE
 }
 DEF epuck E-puck {
   translation -0.694423 0.649556 0
   rotation 0 0 0.9999999999999999 -0.6545003061004253
-  name "e-puck(2)"
+  name "e-puck2"
   controller "epuck_mapping"
   supervisor TRUE
 }

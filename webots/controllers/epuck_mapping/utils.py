@@ -45,7 +45,7 @@ def calc_rotation_time(degress):
     return abs(radians(degress)) / MAX_ROTATION_SPEED
 
 
-def epuck_to_meters(sensor_output: int) -> float:
+def epuck_to_meters(sensor_output: float) -> float:
     """
     Convert epuck robot sensor output value to meters
 
