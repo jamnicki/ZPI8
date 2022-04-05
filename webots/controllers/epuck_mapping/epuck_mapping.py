@@ -3,6 +3,7 @@
 from controller import Supervisor  # type: ignore
 
 import requests
+import math
 
 from utils import (
     initialize_devices, get_distance_sensors, get_motors, get_sensors_values,
@@ -22,6 +23,7 @@ def send_data(url, data):
 def run(robot, timestep):
     robot_name = robot.getName()
     robot_node = robot.getFromDef("epuck")
+    rotation_field = robot_node.getField("rotation")
     if robot_node is None:
         print("DEF node 'epuck' not found!")
 
@@ -34,13 +36,19 @@ def run(robot, timestep):
         timestep=timestep
     )
 
+    i = 0
     while robot.step(timestep) != -1:
+        i += 1
+        if i % 3:
+            continue
         distance_sensors_values = get_sensors_values(distance_sensors)
         robot_position = robot_node.getPosition()
+        robot_rotation = rotation_field.getSFRotation()
 
         data = {
             "robot_name": robot_name,
-            "robot_position": robot_position
+            "robot_position": robot_position,
+            "robot_rotation": robot_rotation[-1]
         }
         data.update({
             "distance_sensors": {
