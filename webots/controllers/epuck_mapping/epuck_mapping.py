@@ -3,7 +3,6 @@
 from controller import Supervisor  # type: ignore
 
 import requests
-import math
 
 from utils import (
     initialize_devices, get_distance_sensors, get_motors, get_sensors_values,

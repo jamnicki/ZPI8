@@ -24,7 +24,7 @@
   function updateCanvas() {
     const green = [48, 138, 55, 200];
     const black = [0, 0, 0, 255];
-    const white = [255, 255, 255, 50];
+    const white = [255, 255, 255, 255];
     for (const robot of robots) {
       let { x, y } = robot.position;
       if (canvasData) {
@@ -36,7 +36,7 @@
           if (sensor < 0.05) {
             drawSquare(20, [xn, yn], ...black);
           } else {
-            if (eraser) drawSquare(5, [xn, yn], ...white);
+            if (eraser) drawSquare(20, [xn, yn], ...white);
           }
         }
       }
