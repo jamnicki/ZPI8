@@ -2,8 +2,8 @@
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.43715078964694143 0.43824602216128894 0.7853913745202851 1.8076283244563653
-  position 0.17568991990455218 -3.7738198350068846 6.2803145562273945
+  orientation -0.5386207010145843 0.5453961895589893 0.6422077053828401 1.9884450554390367
+  position -0.1343304836634619 -1.1243763186866138 6.153719943993848
   follow "e-puck0"
   followType "None"
 }
@@ -22,57 +22,32 @@ RectangleArena {
   }
 }
 DEF epuck E-puck {
-  translation 0.496417 0.290586 0
-  rotation 0 0 1 0.3927003061004253
+  hidden position_0_0 1845.4559057473282
+  hidden position_0_1 1832.2399288809304
+  hidden rotation_1 0 0.9999999999999999 0 3.2209007808019186
+  hidden rotation_2 0 -1 0 5.547088012174205
+  translation -0.916837 -0.91721 -0.00284562
+  rotation -0.0007489333338647582 -0.0007399493298598059 0.9999994457867718 1.55857
   name "e-puck0"
-  controller "epuck_mapping"
-  supervisor TRUE
-}
-DEF epuck E-puck {
-  translation 0.216746 -0.771716 0
-  rotation 0 0 1 2.3561996938995744
-  name "e-puck1"
-  controller "epuck_mapping"
-  supervisor TRUE
-}
-DEF epuck E-puck {
-  translation -0.694423 0.649556 0
-  rotation 0 0 0.9999999999999999 -0.6545003061004253
-  name "e-puck2"
-  controller "epuck_mapping"
+  controller "line_by_line"
   supervisor TRUE
 }
 WoodenBox {
-  translation 0 0 0.1
-  size 0.2 0.2 0.2
+  translation 0 0 0.075
+  size 0.15 0.15 0.15
 }
 WoodenBox {
-  translation -0.67 -0.58 0.05
+  translation -0.7 0.66 0.075
   name "wooden box(1)"
-  size 0.1 0.1 0.1
+  size 0.15 0.15 0.15
 }
 WoodenBox {
-  translation 0.57 0.7 0.05
+  translation 0.6 0.66 0.075
+  name "wooden box(3)"
+  size 0.15 0.15 0.15
+}
+WoodenBox {
+  translation -0.17 -0.66 0.075
   name "wooden box(2)"
-  size 0.1 0.1 0.1
-}
-Wall {
-  translation -0.55 0.25 0
-  size 0.03 0.3 0.3
-}
-Wall {
-  translation 0.31 -0.39 0
-  name "wall(1)"
-  size 0.03 0.3 0.3
-}
-Wall {
-  translation 0.07 -0.38 0
-  name "wall(2)"
-  size 0.5 0.03 0.3
-}
-Wall {
-  translation 0.112163 0.51449 0
-  rotation 0 0 1 -0.6544996938995746
-  name "wall(3)"
-  size 0.5 0.03 0.3
+  size 0.15 0.15 0.15
 }
