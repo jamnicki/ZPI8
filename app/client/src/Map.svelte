@@ -7,7 +7,8 @@
   };
 
   export let name;
-  export let size;
+  export let mapSize;
+  export let matrixSize;
   export let robots = [];
 
   let canvas;
@@ -15,7 +16,7 @@
   let ctxImg;
   $: if (canvas) {
     ctx = canvas.getContext('2d');
-    canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    ctxImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
   }
 
   function drawPixel(pos, r, g, b, a) {
@@ -38,55 +39,41 @@
     for (const { pos, state } of pixels) {
       // state: -1 - white, 0 - green, 1 - black
       const color = state == -1 ? colors.white : state == 0 ? colors.green : colors.black;
-      drawPixel(pos, ...color);
+      drawPixel([pos[1], pos[0]], ...color); // x and y are switched
     }
     ctx.putImageData(ctxImg, 0, 0);
-    // for (const robot of robots) {
-    //   let { x, y } = robot.position;
-    //   if (ctxImg) {
-    //     drawSquare(3, [x, y], ...green);
-    //     for (let i in robot.sensors) {
-    //       let sensor = robot.sensors[i];
-    //       const xn = Math.round(Math.abs(Math.cos(orient[i] + robot.rotation) * sensor * 1000 - x), 0);
-    //       const yn = Math.round(Math.abs(Math.sin(orient[i] + robot.rotation) * sensor * 1000 + y), 0);
-    //       if (sensor < 0.05) {
-    //         drawSquare(20, [xn, yn], ...colors.black);
-    //       }
-    //     }
-    //   }
-    // }
-    // ctx.putImageData(ctxImg, 0, 0);
   }
 </script>
 
 <div class="wrapper">
-  <h1>{name} {size.x}x{size.y}</h1>
-  <canvas width={size.x} height={size.y} bind:this={canvas} />
-  {#each robots as robot}
-    <div
-      class="robot"
-      style="top: calc({robot.pos.y}% / 20); left: calc({robot.pos
-        .x}% / 20); transform: translate(-50%, -50%) rotate({robot.deg}rad);"
-    >
-      <span>x{robot.pos.y}</span><br />
-      <span>y{robot.pos.y}</span>
-      {#each robot.sensors as sensor, s}
-        <div class="laser" style="transform: rotate({-orient[s]}rad); width: {sensor * 1000}px">
-          <span>{s}</span>
-        </div>
-      {/each}
-    </div>
-  {/each}
+  <h1>{name}</h1>
+  <div class="map">
+    <canvas width={matrixSize.x} height={matrixSize.y} bind:this={canvas} />
+    {#each robots as robot}
+      <div
+        class="robot"
+        style="top: {robot.pos.y}%; left: {robot.pos.x}%; transform: translate(-50%, -50%) rotate({robot.deg}rad);"
+      >
+        <span>x{robot.pos.x}</span><br />
+        <span>y{robot.pos.y}</span>
+        {#each robot.sensors as sensor, s}
+          <div class="laser" style="transform: rotate({-orient[s]}rad); width: {sensor * 1000}px">
+            <span>{s}</span>
+          </div>
+        {/each}
+      </div>
+    {/each}
+  </div>
 </div>
 
 <style>
+  .map {
+    position: relative;
+  }
+
   canvas {
     width: 100%;
     border: solid 1px blue;
-  }
-
-  .wrapper {
-    position: relative;
   }
 
   .robot {

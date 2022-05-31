@@ -86,18 +86,17 @@ def run(robot, timestep):
         changed_pixels = set()
         for pcoords in robot_pixels:
             changed_pixels.add(pcoords)
-
-        for w, k in robot_pixels:
-            pixels_state[w][k] = 0
+            pixels_state[pcoords[0]][pcoords[1]] = 0
         # ####################################
 
         data = {
-            "size": (MATRIX_SIZE, MATRIX_SIZE),
+            "name": controller_name,
+            "mapSize": (arena_size, arena_size),
+            "matrixSize": (MATRIX_SIZE, MATRIX_SIZE),
             "pixels": [
                 {"pos": (i, j), "state": int(pixels_state[i][j])}
                 for (i, j) in changed_pixels
             ],
-            "map": controller_name,
             "pos": (robot_x, robot_y),
             "deg": robot_rotation[-1]
         }
