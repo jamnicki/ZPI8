@@ -15,26 +15,31 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 app.post('/robot/:id', (req, res) => {
   // body {
-  //   map: (str),
-  //   size: [(int), (int)],
+  //   name: (str),
+  //   mapSize: [(float), (float)],
+  //   matrixSize: [(int),(int)],
   //   pixels: [{ pos: [(int),(int)], state: (-1/0/1) }, ...],
   //   pos: [(float),(float)],
   //   deg: (float),
   //   sensors: { (str): (float), ...}
   // }
+  const { name, mapSize, matrixSize, pixels, pos, deg, sensors } = req.body;
   const id = parseInt(req.params.id.replace('e-puck', ''));
-  const map = req.body.map;
-  const size = req.body.size;
-  const pos = req.body.pos;
+  // convert position values to percentages
+  // ONLY WORKS IF THE (0,0) POINT IS IN THE CENTER OF THE MAP!
+  pos[0] = ((1 + pos[0]) / mapSize[0]) * 100;
+  pos[1] = ((1 + pos[1]) / mapSize[1]) * 100;
+  console.log(pos);
   io.emit('robot', {
-    name: `${map}::${x}::${y}`,
-    size: { x: size[0], y: size[1] },
-    pixels: req.body.pixels,
+    name: `${name}-${mapSize[0]}x${mapSize[1]}-[${matrixSize[0]}x${matrixSize[1]}]`,
+    mapSize: { x: mapSize[0], y: mapSize[1] },
+    matrixSize: { x: matrixSize[0], y: matrixSize[1] },
+    pixels,
     id,
-    pos: { x: pos[0], y: pos[1] },
-    deg: req.body.deg,
+    pos: { x: pos[0], y: 100 - pos[1] },
+    deg,
     // deg: req.body.deg + Math.PI / 2,
-    sensors: Object.values(req.body.distance_sensors), // from indexed object to array
+    sensors: Object.values(sensors), // from indexed object to array
   });
   res.send(`robot: ${id}`);
 });
