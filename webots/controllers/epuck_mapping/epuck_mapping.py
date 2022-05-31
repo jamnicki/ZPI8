@@ -117,6 +117,9 @@ def run(robot, timestep):
         changed_pixels = set()
         for pcoords in robot_pixels:
             changed_pixels.add(pcoords)
+
+        for w, k in robot_pixels:
+            pixels_state[w][k] = 0
         # ####################################
 
         data = {
