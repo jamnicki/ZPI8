@@ -21,37 +21,6 @@ def send_data(url, data):
         print(e)
 
 
-# def get_pixel_range(matrix_size, arena_size, pixel_size):
-#     mid_index = matrix_size // 2
-#     pixel_halfsize = pixel_size / 2
-#     arena_halfsize = arena_size / 2
-#     pixels_range = np.full((matrix_size, matrix_size), None)
-#     for row in range(matrix_size):
-#         for col in range(matrix_size):
-#             if row < mid_index:
-#                 x0 = (col * pixel_size) - arena_halfsize
-#                 x1 = ((col + 1) * pixel_size) - arena_halfsize
-#             elif row > mid_index:
-#                 x0 = arena_halfsize - (col * pixel_size)
-#                 x1 = arena_halfsize - ((col + 1) * pixel_size)
-#             else:
-#                 x0 = 0 - pixel_halfsize
-#                 x1 = 0 + pixel_halfsize
-
-#             if col < mid_index:
-#                 y0 = (row * pixel_size) - arena_halfsize
-#                 y1 = ((row + 1) * pixel_size) - arena_halfsize
-#             elif col > mid_index:
-#                 y0 = arena_halfsize - (row * pixel_size)
-#                 y1 = arena_halfsize - ((row + 1) * pixel_size)
-#             else:
-#                 y0 = 0 - pixel_halfsize
-#                 y1 = 0 + pixel_halfsize
-
-#             pixels_range[row][col] = (x0, y0, x1, y1)
-#     return pixels_range
-
-
 def get_target_pixel(x, y, pixel_size, mid_index):
     if x > 0:
         column = mid_index + (abs(x) // pixel_size)

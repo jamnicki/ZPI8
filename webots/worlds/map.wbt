@@ -29,7 +29,7 @@ DEF epuck E-puck {
   translation -0.916837 -0.91721 -0.00284562
   rotation -0.0007489333338647582 -0.0007399493298598059 0.9999994457867718 1.55857
   name "e-puck0"
-  controller "epuck_mapping"
+  controller "conection_controler"
   supervisor TRUE
 }
 WoodenBox {
