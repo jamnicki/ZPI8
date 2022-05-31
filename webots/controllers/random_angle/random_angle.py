@@ -11,7 +11,7 @@ from utils import (
     epuck_to_meters
 )
 from action import avoid_obstacles
-from config import DATA_ENDPOINT
+from config import DATA_ENDPOINT, SENSORS_ORIENTATION
 
 
 def send_data(url, data):

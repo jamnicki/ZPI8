@@ -124,7 +124,7 @@ def get_target_pixel(x, y, pixel_size, mid_index):
     return int(row), int(column)
 
 
-def left_to_right(robot):
+def left_to_right(robot, controller_name):
     own_robot = robot_controller(robot, world_dim_x = WORD_X , world_dim_y = WORD_Y) 
 
     robot_name = robot.getName()
@@ -141,8 +141,6 @@ def left_to_right(robot):
     arena_x, arena_y = arena_node.getField("floorSize").getSFVec2f()
     assert arena_x == arena_y, "The arena must be a square!"
     arena_size = arena_x
-
-    controller_name = os.path.basename(__file__).split(".")[0]
 
     MATRIX_SIZE = 100
     mid_index = MATRIX_SIZE // 2
@@ -171,24 +169,23 @@ def left_to_right(robot):
         changed_pixels = set()
         for pcoords in robot_pixels:
             changed_pixels.add(pcoords)
-
-        for w, k in robot_pixels:
-            pixels_state[w][k] = 0
+            pixels_state[pcoords[0]][pcoords[1]] = 0
         # --------------- update pixels state ---------------
 
         # --------------- send data ---------------
         data = {
-            "size": (MATRIX_SIZE, MATRIX_SIZE),
+            "name": controller_name,
+            "mapSize": (arena_size, arena_size),
+            "matrixSize": (MATRIX_SIZE, MATRIX_SIZE),
             "pixels": [
                 {"pos": (i, j), "state": int(pixels_state[i][j])}
                 for (i, j) in changed_pixels
             ],
-            "map": controller_name,
             "pos": (robot_x, robot_y),
             "deg": robot_rotation[-1]
         }
         data.update({
-            "distance_sensors": {
+            "sensors": {
                 f"ps{i}": epuck_to_meters(sensor.getValue())
                 for i, sensor in enumerate(prox_sensors)
             }
