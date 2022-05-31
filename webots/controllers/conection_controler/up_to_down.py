@@ -10,6 +10,10 @@ import requests
 import math
 from enum import Enum
 
+import os
+import numpy as np
+
+
 CURRENT_TIME = 0
 
 class robot_State(Enum):
@@ -99,6 +103,25 @@ def send_data(url, data):
     except Exception as e:
         print(e)
 
+
+def get_target_pixel(x, y, pixel_size, mid_index):
+    if x > 0:
+        column = mid_index + (abs(x) // pixel_size)
+    elif x < 0:
+        column = mid_index - (abs(x) // pixel_size)
+    else:
+        column = mid_index
+
+    if y > 0:
+        row = mid_index - (abs(y) // pixel_size)
+    elif y < 0:
+        row = mid_index + (abs(y) // pixel_size)
+    else:
+        row = mid_index
+
+    return int(row), int(column)
+
+
 def up_to_down(robot):
     own_robot = robot_controller(robot, world_dim_x = WORD_X , world_dim_y = WORD_Y) 
     robot_name = robot.getName()
@@ -110,24 +133,61 @@ def up_to_down(robot):
         prox_sensors.append(robot.getDevice(sensor_name))
         prox_sensors[ind].enable(TIME_STEP)
 
-    data = {
-            "robot_name": robot_name,
-            "robot_position": own_robot.node_robot.getPosition(),
-            "robot_rotation": rotation_field.getSFRotation()[-1]
-            # "robot_rotation": own_robot.theta_deg
-        }
-    data.update({
-        "distance_sensors": {
-            f"ps{i}": epuck_to_meters(sensor.getValue())
-            for i, sensor in enumerate(prox_sensors)
-        }
-    })
-    send_data(DATA_ENDPOINT.format(name=robot_name), data)
+    # --------------- pixels init ---------------
+    arena_node = robot.getFromDef("arena")
+    arena_x, arena_y = arena_node.getField("floorSize").getSFVec2f()
+    assert arena_x == arena_y, "The arena must be a square!"
+    arena_size = arena_x
+
+    controller_name = os.path.basename(__file__).split(".")[0]
+
+    MATRIX_SIZE = 100
+    mid_index = MATRIX_SIZE // 2
+    pixel_size = arena_size / MATRIX_SIZE
+
+    # -1: not discovered, 0: no obstacle, 1: obstacle
+    pixels_state = np.full((MATRIX_SIZE, MATRIX_SIZE), -1)
+    # --------------- pixels init ---------------
 
     desired_angle_deg = -179
     obstacle_avoidence_duration = DURATION
     while robot.step(TIME_STEP) != -1:
-    
+        # --------------- update pixels state ---------------
+        robot_x, robot_y, _ = own_robot.node_robot.getPosition()  # x, y, z
+        robot_rotation = rotation_field.getSFRotation()
+
+        robot_pixels = set()
+        robot_pixels.add(get_target_pixel(robot_x, robot_y, pixel_size, mid_index))
+
+        changed_pixels = set()
+        for pcoords in robot_pixels:
+            changed_pixels.add(pcoords)
+
+        for w, k in robot_pixels:
+            pixels_state[w][k] = 0
+        # --------------- update pixels state ---------------
+
+        # --------------- send data ---------------
+        data = {
+            "size": (MATRIX_SIZE, MATRIX_SIZE),
+            "pixels": [
+                {"pos": (i, j), "state": int(pixels_state[i][j])}
+                for (i, j) in changed_pixels
+            ],
+            "map": controller_name,
+            "pos": (robot_x, robot_y),
+            "deg": robot_rotation[-1]
+        }
+        data.update({
+            "distance_sensors": {
+                f"ps{i}": epuck_to_meters(sensor.getValue())
+                for i, sensor in enumerate(prox_sensors)
+            }
+        })
+
+        send_data(DATA_ENDPOINT.format(name=robot_name), data)
+        # --------------- send data ---------------
+
         print('robot 1: ',own_robot.state)
         print('robot 1: ',own_robot.is_rotate)
         own_robot.update_robot_pose()
@@ -180,8 +240,9 @@ WORD_Y = 1.5
 SPEED = 2
 DURATION = 2
 TIME_STEP = 32
+
 HOST = "localhost"
 PORT = 8000
 
 # e-puck0, e-puck1, e-puck2, ...
-DATA_ENDPOINT = f"http://{HOST}:{PORT}" + "/robot/{name}/distance-sensors"
+DATA_ENDPOINT = f"http://{HOST}:{PORT}" + "/robot/{name}"
