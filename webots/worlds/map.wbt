@@ -3,7 +3,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.5386207010145843 0.5453961895589893 0.6422077053828401 1.9884450554390367
-  position -0.1343304836634619 -1.1243763186866138 6.153719943993848
+  position -0.13419753618514654 -1.1137250356711237 6.09347238054421
   follow "e-puck0"
   followType "None"
 }
@@ -15,7 +15,7 @@ Background {
     0 0 0
   ]
 }
-RectangleArena {
+DEF arena RectangleArena {
   floorSize 2 2
   floorAppearance Parquetry {
     type "light strip"
@@ -24,12 +24,12 @@ RectangleArena {
 DEF epuck E-puck {
   hidden position_0_0 1845.4559057473282
   hidden position_0_1 1832.2399288809304
-  hidden rotation_1 0 0.9999999999999999 0 3.2209007808019186
-  hidden rotation_2 0 -1 0 5.547088012174205
+  hidden rotation_1 0 0.9999999999999999 0 3.220900780801919
+  hidden rotation_2 0 -1 0 5.547088012174206
   translation -0.916837 -0.91721 -0.00284562
   rotation -0.0007489333338647582 -0.0007399493298598059 0.9999994457867718 1.55857
   name "e-puck0"
-  controller "line_by_line"
+  controller "epuck_mapping"
   supervisor TRUE
 }
 WoodenBox {
