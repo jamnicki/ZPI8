@@ -29,16 +29,14 @@ app.post('/robot/:id', (req, res) => {
   // ONLY WORKS IF THE (0,0) POINT IS IN THE CENTER OF THE MAP!
   pos[0] = ((1 + pos[0]) / mapSize[0]) * 100;
   pos[1] = ((1 + pos[1]) / mapSize[1]) * 100;
-  console.log(pos);
   io.emit('robot', {
-    name: `${name}-${mapSize[0]}x${mapSize[1]}-[${matrixSize[0]}x${matrixSize[1]}]`,
+    name: `${name} ${mapSize[0]}x${mapSize[1]} [${matrixSize[0]}x${matrixSize[1]}]`,
     mapSize: { x: mapSize[0], y: mapSize[1] },
     matrixSize: { x: matrixSize[0], y: matrixSize[1] },
     pixels,
     id,
     pos: { x: pos[0], y: 100 - pos[1] },
-    deg,
-    // deg: req.body.deg + Math.PI / 2,
+    deg: deg + Math.PI / 2, // Math.PI / 2 to add 90 deg
     sensors: Object.values(sensors), // from indexed object to array
   });
   res.send(`robot: ${id}`);

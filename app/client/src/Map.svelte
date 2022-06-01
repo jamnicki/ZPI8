@@ -1,5 +1,5 @@
 <script>
-  const orient = [1.27, 0.77, 0, 5.21, 4.21, 3.14159, 2.37, 1.87];
+  const orient = [1.27, 0.77, 0, 5.21, 4.21, 3.14159, 2.37, 1.87]; // rad
   const colors = {
     white: [255, 255, 255, 255],
     green: [48, 138, 55, 200],
@@ -10,6 +10,22 @@
   export let mapSize;
   export let matrixSize;
   export let robots = [];
+
+  const robotSize = (0.074 / mapSize.x) * 100; //m
+
+  const range = r => [...Array(r).keys()];
+  let pixels = range(matrixSize.x).map(() => range(matrixSize.y).map(() => -1));
+  let states = { unknown: null, visited: null, wall: null };
+  $: {
+    states = { unknown: 0, visited: 0, wall: 0 };
+    for (const i of pixels) {
+      for (const j of i) {
+        if (j == -1) states.unknown += 1;
+        else if (j == 0) states.visited += 1;
+        else states.wall += 1;
+      }
+    }
+  }
 
   let canvas;
   let ctx;
@@ -35,8 +51,9 @@
     }
   }
 
-  export function updateCanvas(pixels) {
-    for (const { pos, state } of pixels) {
+  export function updateCanvas(newPixels) {
+    for (const { pos, state } of newPixels) {
+      pixels[pos[0]][pos[1]] = state;
       // state: -1 - white, 0 - green, 1 - black
       const color = state == -1 ? colors.white : state == 0 ? colors.green : colors.black;
       drawPixel([pos[1], pos[0]], ...color); // x and y are switched
@@ -47,19 +64,34 @@
 
 <div class="wrapper">
   <h1>{name}</h1>
+  <br />
+  <div class="info">
+    <div class="legend">
+      <div>
+        <div class="color" style="background-color: rgba({colors.white.toString()})" />
+        Nieznane: {Number(Math.round((states.unknown / (matrixSize.x + matrixSize.y)) * 100) / 100).toFixed(2)}%
+      </div>
+      <div>
+        <div class="color" style="background-color: rgba({colors.green.toString()})" />
+        Odwiedzone: {Number(Math.round((states.visited / (matrixSize.x + matrixSize.y)) * 100) / 100).toFixed(2)}%
+      </div>
+      <div>
+        <div class="color" style="background-color: rgba({colors.black.toString()})" />
+        Przeszkoda: {Number(Math.round((states.wall / (matrixSize.x + matrixSize.y)) * 100) / 100).toFixed(2)}%
+      </div>
+    </div>
+  </div>
+  <br />
   <div class="map">
     <canvas width={matrixSize.x} height={matrixSize.y} bind:this={canvas} />
     {#each robots as robot}
       <div
         class="robot"
-        style="top: {robot.pos.y}%; left: {robot.pos.x}%; transform: translate(-50%, -50%) rotate({robot.deg}rad);"
+        style="top: {robot.pos.y}%; left: {robot.pos
+          .x}%; width: {robotSize}%; height: {robotSize}%; transform: translate(-50%, -50%) rotate({robot.deg}rad);"
       >
-        <span>x{robot.pos.x}</span><br />
-        <span>y{robot.pos.y}</span>
         {#each robot.sensors as sensor, s}
-          <div class="laser" style="transform: rotate({-orient[s]}rad); width: {sensor * 1000}px">
-            <span>{s}</span>
-          </div>
+          <div class="laser" style="transform: rotate({-orient[s]}rad); width: {sensor * 400}px" />
         {/each}
       </div>
     {/each}
@@ -71,24 +103,33 @@
     position: relative;
   }
 
+  .legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  .legend > div {
+    justify-self: center;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .color {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+
   canvas {
     width: 100%;
-    border: solid 1px blue;
+    border: solid 1px rgb(0, 0, 0);
   }
 
   .robot {
     position: absolute;
-    width: 3.75%;
-    height: 3.75%;
-    background-color: rgb(48, 138, 55);
+    background-color: rgb(62, 79, 231);
     border-radius: 50%;
     line-height: 0.75;
-  }
-  .robot span {
-    position: relative;
-    top: 20%;
-    color: #000;
-    font-size: 0.8rem;
   }
 
   .laser {
@@ -97,12 +138,7 @@
     top: 50%;
     left: 50%;
     height: 2px;
-    background-color: rgb(255, 75, 216);
+    background-color: rgb(191, 81, 255);
     transform-origin: left center;
-  }
-  .laser span {
-    position: absolute;
-    top: 5px;
-    right: 0;
   }
 </style>

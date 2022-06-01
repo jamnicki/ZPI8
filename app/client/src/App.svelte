@@ -30,20 +30,43 @@
 
 <main>
   {#each maps as { map, name, mapSize, matrixSize, robots }}
-    {#each robots as { pos, deg }, i}
-      epuck {i + 1}:<br />
-      x: {Math.round(pos.x * 100) / 100}<br />
-      y: {Math.round(pos.y * 100) / 100}<br />
-      deg: {Math.round(deg * 100) / 100}
-    {/each}
-    <Map {name} {mapSize} {matrixSize} {robots} bind:this={map} />
+    <div class="map">
+      <div class="robots">
+        {#each robots as { pos, deg }, i}
+          <div class="robot">
+            <b>epuck {i + 1}:</b><br />
+            x: {Math.round(pos.x * 100) / 100}<br />
+            y: {Math.round(pos.y * 100) / 100}<br />
+            deg: {Math.round(deg * 100) / 100}
+          </div>
+        {/each}
+      </div>
+      <br />
+      <Map {name} {mapSize} {matrixSize} {robots} bind:this={map} />
+    </div>
   {/each}
 </main>
 
 <style>
   main {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
     padding: 1rem;
     font-size: 1.2rem;
     text-align: center;
+  }
+  .map {
+    width: 100%;
+  }
+  .robots {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .robot {
+    background-color: rgb(240, 240, 240);
+    border-radius: 1rem;
+    padding: 1rem;
   }
 </style>
