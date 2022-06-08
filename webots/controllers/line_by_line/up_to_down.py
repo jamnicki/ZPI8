@@ -309,7 +309,7 @@ def up_to_down(robot, controller_name):
 WORD_X = 1.5
 WORD_Y = 1.5
 SPEED = 2
-DURATION = 2
+DURATION = 0.5
 TIME_STEP = 32
 
 HOST = "localhost"
