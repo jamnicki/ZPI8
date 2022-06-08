@@ -1,21 +1,23 @@
 <script>
-  const orient = [1.27, 0.77, 0, 5.21, 4.21, 3.14159, 2.37, 1.87]; // rad
-  const colors = {
-    white: [255, 255, 255, 255],
-    green: [48, 138, 55, 200],
-    black: [0, 0, 0, 255],
-  };
+  import { onMount } from 'svelte';
+  import Chart from './Chart.svelte';
+
+  import { logInterval, orient, colors } from './config.js';
 
   export let name;
   export let mapSize;
   export let matrixSize;
   export let robots = [];
 
+  let time;
+  let chart;
+
   const robotSize = (0.074 / mapSize.x) * 100; //m
 
   const range = r => [...Array(r).keys()];
   let pixels = range(matrixSize.x).map(() => range(matrixSize.y).map(() => -1));
   let states = { unknown: null, visited: null, wall: null };
+  let statesPrcnt = { unknown: null, visited: null, wall: null };
   $: {
     states = { unknown: 0, visited: 0, wall: 0 };
     for (const i of pixels) {
@@ -24,6 +26,9 @@
         else if (j == 0) states.visited += 1;
         else states.wall += 1;
       }
+    }
+    for (let state of Object.keys(states)) {
+      statesPrcnt[state] = Number(Math.round((states[state] / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2);
     }
   }
 
@@ -60,6 +65,14 @@
     }
     ctx.putImageData(ctxImg, 0, 0);
   }
+
+  onMount(() => {
+    const interval = setInterval(() => {
+      time = Date.now();
+      chart.plot(statesPrcnt, time);
+    }, logInterval);
+    return () => clearInterval(interval);
+  });
 </script>
 
 <div class="wrapper">
@@ -69,15 +82,15 @@
     <div class="legend">
       <div>
         <div class="color" style="background-color: rgba({colors.white.toString()})" />
-        Nieznane: {Number(Math.round((states.unknown / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2)}%
+        Nieznane:<br />{statesPrcnt.unknown}%
       </div>
       <div>
         <div class="color" style="background-color: rgba({colors.green.toString()})" />
-        Odwiedzone: {Number(Math.round((states.visited / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2)}%
+        Odwiedzone:<br />{statesPrcnt.visited}%
       </div>
       <div>
         <div class="color" style="background-color: rgba({colors.black.toString()})" />
-        Przeszkoda: {Number(Math.round((states.wall / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2)}%
+        Przeszkoda:<br />{statesPrcnt.wall}%
       </div>
     </div>
   </div>
@@ -96,6 +109,7 @@
       </div>
     {/each}
   </div>
+  <Chart bind:this={chart} />
 </div>
 
 <style>
