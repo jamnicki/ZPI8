@@ -316,7 +316,7 @@ def left_to_right(robot, controller_name):
 
 WORD_X = 1.5
 WORD_Y = 1.5
-SPEED = 5
+SPEED = 2
 DURATION = 1
 TIME_STEP = 32
 
