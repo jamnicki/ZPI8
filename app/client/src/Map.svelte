@@ -69,15 +69,15 @@
     <div class="legend">
       <div>
         <div class="color" style="background-color: rgba({colors.white.toString()})" />
-        Nieznane: {Number(Math.round((states.unknown / (matrixSize.x + matrixSize.y)) * 100) / 100).toFixed(2)}%
+        Nieznane: {Number(Math.round((states.unknown / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2)}%
       </div>
       <div>
         <div class="color" style="background-color: rgba({colors.green.toString()})" />
-        Odwiedzone: {Number(Math.round((states.visited / (matrixSize.x + matrixSize.y)) * 100) / 100).toFixed(2)}%
+        Odwiedzone: {Number(Math.round((states.visited / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2)}%
       </div>
       <div>
         <div class="color" style="background-color: rgba({colors.black.toString()})" />
-        Przeszkoda: {Number(Math.round((states.wall / (matrixSize.x + matrixSize.y)) * 100) / 100).toFixed(2)}%
+        Przeszkoda: {Number(Math.round((states.wall / (matrixSize.x * matrixSize.y)) * 10000) / 100).toFixed(2)}%
       </div>
     </div>
   </div>
