@@ -6,7 +6,7 @@ DATA_ENDPOINT = f"http://{HOST}:{PORT}" + "/robot/{name}"
 
 # https://cyberbotics.com/doc/guide/epuck#e-puck-model
 
-MAX_MOTOR_VELOCITY = 4
+MAX_MOTOR_VELOCITY = 2
 MAX_ROTATION_SPEED = 6.28  # rad/s
 MOTOR_USAGE = 1
 
