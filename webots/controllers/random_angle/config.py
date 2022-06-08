@@ -24,3 +24,6 @@ SENSORS_ORIENTATION = {
     "ps6": 2.37,
     "ps7": 1.87
 }
+
+MATRIX_SIZE = 100
+TIME_STEP = 32

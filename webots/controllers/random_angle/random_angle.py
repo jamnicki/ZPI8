@@ -11,7 +11,10 @@ from utils import (
     epuck_to_meters
 )
 from action import avoid_obstacles
-from config import DATA_ENDPOINT, SENSORS_ORIENTATION, ROBOT_DIAMETER, DISTANCE_THRESHOLD
+from config import (
+    DATA_ENDPOINT, SENSORS_ORIENTATION, ROBOT_DIAMETER, DISTANCE_THRESHOLD,
+    MATRIX_SIZE, TIME_STEP
+)
 
 
 def send_data(url, data):
@@ -91,7 +94,6 @@ def run(robot, timestep):
 
     controller_name = os.path.basename(__file__).split(".")[0]
 
-    MATRIX_SIZE = 100
     mid_index = MATRIX_SIZE // 2
     pixel_size = arena_size / MATRIX_SIZE
     robot_pixel_radius = int((ROBOT_DIAMETER / pixel_size) / 2)
@@ -177,7 +179,7 @@ def run(robot, timestep):
             }
         })
 
-        send_data(DATA_ENDPOINT.format(name=robot_name), data)
+        # send_data(DATA_ENDPOINT.format(name=robot_name), data)
 
         avoid_obstacles(
             robot, timestep, left_motor, right_motor, distance_sensors_values
@@ -186,9 +188,8 @@ def run(robot, timestep):
 
 def main():
     robot = Supervisor()
-    timestep = int(robot.getBasicTimeStep())
 
-    run(robot, timestep)
+    run(robot, TIME_STEP)
 
 
 if __name__ == "__main__":
