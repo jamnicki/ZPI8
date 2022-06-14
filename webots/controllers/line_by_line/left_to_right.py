@@ -58,8 +58,8 @@ class robot_controller():
         self.x_pos = robot_position[0] + self.world_dim_x/2
         self.y_pos = robot_position[1] + self.world_dim_y/2
         self.theta_deg =  math.copysign(1,robot_rotation[3])*math.acos(robot_rotation[0])*180/math.pi
-        print("position x: {}, position y: {}, orientation: {}"\
-        .format(self.x_pos, self.y_pos, self.theta_deg))
+        # print("position x: {}, position y: {}, orientation: {}"\
+        # .format(self.x_pos, self.y_pos, self.theta_deg))
         return self.x_pos, self.y_pos, self.theta_deg
     # set equal velocity on both motors
     def set_velocity(self, velocity):
@@ -202,6 +202,19 @@ def left_to_right(robot, controller_name):
         robot_x, robot_y, _ = own_robot.node_robot.getPosition()  # x, y, z
         robot_rotation = rotation_field.getSFRotation()
 
+        orientation = own_robot.node_robot.getOrientation()
+        theta_deg = math.copysign(1, orientation[3]) \
+            * math.acos(orientation[0]) * 180 / math.pi
+
+        if 0 <= theta_deg <= 90:
+            front_deg = 90 - theta_deg
+        elif 90 < theta_deg <= 180:
+            front_deg = 450 - theta_deg
+        elif -180 <= theta_deg <= -90:
+            front_deg = 90 - theta_deg
+        elif -90 < theta_deg < 0:
+            front_deg = 90 - theta_deg
+
         robot_pixel = get_target_pixel(robot_x, robot_y, pixel_size, mid_index)
         robot_pixels = circle_pixels(*robot_pixel, robot_pixel_radius)
 
@@ -213,9 +226,12 @@ def left_to_right(robot, controller_name):
         }.items():
             val = epuck_to_meters(value)
             deg = robot_rotation[-1]
-            x_obstacle = robot_x + (val * np.cos(SENSORS_ORIENTATION[sensor] + deg))
-            y_obstacle = robot_y + (val * np.sin(SENSORS_ORIENTATION[sensor] + deg))
-            ob_px, ob_py = get_target_pixel(x_obstacle, y_obstacle, pixel_size, mid_index)
+            sens_orient = SENSORS_ORIENTATION[sensor]
+            x_obstacle = robot_x + (val * np.cos(sens_orient + deg))
+            y_obstacle = robot_y + (val * np.sin(sens_orient + deg))
+            ob_px, ob_py = get_target_pixel(
+                x_obstacle, y_obstacle, pixel_size, mid_index
+            )
 
             if value > DISTANCE_THRESHOLD:
                 obstacle_pixels.add((ob_px, ob_py))
@@ -256,7 +272,7 @@ def left_to_right(robot, controller_name):
                 for (i, j) in changed_pixels
             ],
             "pos": (robot_x, robot_y),
-            "deg": robot_rotation[-1]
+            "deg": front_deg
         }
         data.update({
             "sensors": {
@@ -286,7 +302,7 @@ def left_to_right(robot, controller_name):
                     if own_robot.obstacle_state == obstacle_State.down:
                         desired_angle_deg = 90 
 
-        if (prox_sensors[0].getValue() > 140) or (prox_sensors[7].getValue() > 140):
+        if (prox_sensors[0].getValue() > 140) or (prox_sensors[7].getValue() > 140) or (prox_sensors[1].getValue() > 140) or (prox_sensors[6].getValue() > 140) :
             # print("WALL DETECTED")
             own_robot.update_robot_pose()
             if(abs(90 - own_robot.theta_deg) < 1):

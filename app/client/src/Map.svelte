@@ -16,15 +16,16 @@
 
   const range = r => [...Array(r).keys()];
   let pixels = range(matrixSize.x).map(() => range(matrixSize.y).map(() => -1));
-  let states = { unknown: null, visited: null, wall: null };
-  let statesPrcnt = { unknown: null, visited: null, wall: null };
+  let states = { unknown: null, visited: null, wall: null, explored: null };
+  let statesPrcnt = { unknown: null, visited: null, wall: null, explored: null };
   $: {
-    states = { unknown: 0, visited: 0, wall: 0 };
+    states = { unknown: 0, visited: 0, wall: 0, explored: 0 };
     for (const i of pixels) {
       for (const j of i) {
         if (j == -1) states.unknown += 1;
         else if (j == 0) states.visited += 1;
         else states.wall += 1;
+        if (j == 0 || j == 1) states.explored += 1;
       }
     }
     for (let state of Object.keys(states)) {
@@ -80,18 +81,22 @@
   <br />
   <div class="info">
     <div class="legend">
-      <div>
-        <div class="color" style="background-color: rgba({colors.white.toString()})" />
-        Nieznane:<br />{statesPrcnt.unknown}%
-      </div>
-      <div>
-        <div class="color" style="background-color: rgba({colors.green.toString()})" />
-        Odwiedzone:<br />{statesPrcnt.visited}%
-      </div>
-      <div>
-        <div class="color" style="background-color: rgba({colors.black.toString()})" />
-        Przeszkoda:<br />{statesPrcnt.wall}%
-      </div>
+        <div>
+          <div class="color" style="background-color: rgba({colors.white.toString()})" />
+          Nieznane:<br />{statesPrcnt.unknown}%
+        </div>
+        <div>
+          <div class="color" style="background-color: rgba({colors.green.toString()})" />
+          Odwiedzone:<br />{statesPrcnt.visited}%
+        </div>
+        <div>
+          <div class="color" style="background-color: rgba({colors.blue.toString()})" />
+          Odkryte:<br />{statesPrcnt.explored}%
+        </div>
+        <div>
+          <div class="color" style="background-color: rgba({colors.black.toString()})" />
+          Przeszkoda:<br />{statesPrcnt.wall}%
+        </div>
     </div>
   </div>
   <br />
@@ -101,7 +106,7 @@
       <div
         class="robot"
         style="top: {robot.pos.y}%; left: {robot.pos
-          .x}%; width: {robotSize}%; height: {robotSize}%; transform: translate(-50%, -50%) rotate({robot.deg}rad);"
+          .x}%; width: {robotSize}%; height: {robotSize}%; transform: translate(-50%, -50%) rotate({robot.deg}deg);"
       >
         {#each robot.sensors as sensor, s}
           <div class="laser" style="transform: rotate({-orient[s]}rad); width: {sensor * 400}px" />
@@ -119,7 +124,8 @@
 
   .legend {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 1rem;
   }
   .legend > div {

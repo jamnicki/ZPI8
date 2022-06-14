@@ -36,7 +36,7 @@ app.post('/robot/:id', (req, res) => {
     pixels,
     id,
     pos: { x: pos[0], y: 100 - pos[1] },
-    deg: deg + Math.PI / 2, // Math.PI / 2 to add 90 deg
+    deg: deg, // Math.PI / 2 to add 90 deg
     sensors: Object.values(sensors), // from indexed object to array
   });
   res.send(`robot: ${id}`);

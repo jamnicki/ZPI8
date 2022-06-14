@@ -4,6 +4,7 @@ from controller import Supervisor  # type: ignore
 
 import requests
 import os
+import math
 import numpy as np
 
 from utils import (
@@ -119,6 +120,19 @@ def run(robot, timestep):
         robot_rotation = rotation_field.getSFRotation()
         robot_x, robot_y, _ = robot_node.getPosition()  # x, y, z
 
+        orientation = robot_node.getOrientation()
+        theta_deg = math.copysign(1, orientation[3]) \
+            * math.acos(orientation[0]) * 180 / math.pi
+
+        if 0 <= theta_deg <= 90:
+            front_deg = 90 - theta_deg
+        elif 90 < theta_deg <= 180:
+            front_deg = 450 - theta_deg
+        elif -180 <= theta_deg <= -90:
+            front_deg = 90 - theta_deg
+        elif -90 < theta_deg < 0:
+            front_deg = 90 - theta_deg
+
         # ####### update pixels state #######
         robot_pixel = get_target_pixel(robot_x, robot_y, pixel_size, mid_index)
         robot_pixels = circle_pixels(*robot_pixel, robot_pixel_radius)
@@ -128,9 +142,12 @@ def run(robot, timestep):
         for sensor, value in distance_sensors_values.items():
             val = epuck_to_meters(value)
             deg = robot_rotation[-1]
-            x_obstacle = robot_x + (val * np.cos(SENSORS_ORIENTATION[sensor] + deg))
-            y_obstacle = robot_y + (val * np.sin(SENSORS_ORIENTATION[sensor] + deg))
-            ob_px, ob_py = get_target_pixel(x_obstacle, y_obstacle, pixel_size, mid_index)
+            sens_orient = SENSORS_ORIENTATION[sensor]
+            x_obstacle = robot_x + (val * np.cos(sens_orient + deg))
+            y_obstacle = robot_y + (val * np.sin(sens_orient + deg))
+            ob_px, ob_py = get_target_pixel(
+                x_obstacle, y_obstacle, pixel_size, mid_index
+            )
 
             if value > DISTANCE_THRESHOLD:
                 obstacle_pixels.add((ob_px, ob_py))
@@ -170,7 +187,8 @@ def run(robot, timestep):
                 for (i, j) in changed_pixels
             ],
             "pos": (robot_x, robot_y),
-            "deg": robot_rotation[-1]
+            # "deg": robot_rotation[-1]
+            "deg": front_deg
         }
         data.update({
             "sensors": {
@@ -179,7 +197,7 @@ def run(robot, timestep):
             }
         })
 
-        # send_data(DATA_ENDPOINT.format(name=robot_name), data)
+        send_data(DATA_ENDPOINT.format(name=robot_name), data)
 
         avoid_obstacles(
             robot, timestep, left_motor, right_motor, distance_sensors_values

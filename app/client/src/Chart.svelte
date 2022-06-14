@@ -5,7 +5,7 @@
   import 'chartjs-adapter-date-fns';
   import { pl } from 'date-fns/locale';
 
-  import { logInterval, orient, colors } from './config.js';
+  import { colors } from './config.js';
 
   let canvas;
   let chart;
@@ -19,21 +19,24 @@
             label: 'Nieznane',
             backgroundColor: `rgba(${colors.white.toString()})`,
             borderColor: `rgba(${colors.white.toString()})`,
-            radius: 4,
             showLine: true,
           },
           {
             label: 'Odwiedzone',
             backgroundColor: `rgba(${colors.green.toString()})`,
             borderColor: `rgba(${colors.green.toString()})`,
-            radius: 4,
             showLine: true,
           },
           {
             label: 'Przeszkoda',
             backgroundColor: `rgba(${colors.black.toString()})`,
             borderColor: `rgba(${colors.black.toString()})`,
-            radius: 4,
+            showLine: true,
+          },
+          {
+            label: 'Odkryte',
+            backgroundColor: `rgba(${colors.blue.toString()})`,
+            borderColor: `rgba(${colors.blue.toString()})`,
             showLine: true,
           },
         ],
@@ -41,7 +44,7 @@
       options: {
         fill: false,
         interaction: { intersect: false },
-        radius: 0,
+        radius: 2,
         tension: 0,
         spanGaps: true,
         plugins: { legend: { position: 'bottom' } },
@@ -60,6 +63,7 @@
     chart.data.datasets[0].data = [...chart.data.datasets[0].data, { x: time, y: states.unknown }];
     chart.data.datasets[1].data = [...chart.data.datasets[1].data, { x: time, y: states.visited }];
     chart.data.datasets[2].data = [...chart.data.datasets[2].data, { x: time, y: states.wall }];
+    chart.data.datasets[3].data = [...chart.data.datasets[3].data, { x: time, y: states.explored }];
     chart.update();
   }
 
