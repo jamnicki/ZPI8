@@ -275,8 +275,8 @@ def up_to_down(robot, controller_name):
         send_data(DATA_ENDPOINT.format(name=robot_name), data)
         # --------------- send data ---------------
 
-        print('robot 1: ',own_robot.state)
-        print('robot 1: ',own_robot.is_rotate)
+        # print('robot 1: ',own_robot.state)
+        # print('robot 1: ',own_robot.is_rotate)
         own_robot.update_robot_pose()
 
         own_robot.rotate(desired_angle_deg)
@@ -294,8 +294,8 @@ def up_to_down(robot, controller_name):
                     if own_robot.obstacle_state == obstacle_State.right:
                         desired_angle_deg = -179
 
-        if (prox_sensors[0].getValue() > 140) or (prox_sensors[7].getValue() > 140) or (prox_sensors[1].getValue() > 140) or (prox_sensors[6].getValue() > 140):
-            print("WALL DETECTED")
+        if (prox_sensors[0].getValue() > DISTANCE_THRESHOLD) or (prox_sensors[7].getValue() > DISTANCE_THRESHOLD) or (prox_sensors[1].getValue() > DISTANCE_THRESHOLD) or (prox_sensors[6].getValue() > DISTANCE_THRESHOLD):
+            # print("WALL DETECTED")
             own_robot.update_robot_pose()
             if(abs(-179 - own_robot.theta_deg) < 1):
                 own_robot.state = robot_State.wall_and_minus_180
@@ -324,7 +324,7 @@ def up_to_down(robot, controller_name):
 
 WORD_X = 1.5
 WORD_Y = 1.5
-SPEED = 2
+SPEED = 6
 DURATION = 0.5
 TIME_STEP = 32
 
@@ -334,7 +334,7 @@ PORT = 8000
 # e-puck0, e-puck1, e-puck2, ...
 DATA_ENDPOINT = f"http://{HOST}:{PORT}" + "/robot/{name}"
 
-DISTANCE_THRESHOLD = 100
+DISTANCE_THRESHOLD = 140
 ROBOT_DIAMETER = 0.074  # m
 SENSORS_ORIENTATION = {
     "ps0": 1.27,

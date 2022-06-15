@@ -279,13 +279,13 @@ def run_robot(robot):
             controller = up_to_down(robot, controller_name)
             controller
 
-        print(controller)
+        # print(controller)
 
 
 if __name__ == "__main__":
     WORD_X = 1.5
     WORD_Y = 1.5
-    SPEED = 2
+    SPEED = 6
     DURATION = 0.5
     TIME_STEP = 32
 
@@ -295,7 +295,7 @@ if __name__ == "__main__":
     # e-puck0, e-puck1, e-puck2, ...
     DATA_ENDPOINT = f"http://{HOST}:{PORT}" + "/robot/{name}"
 
-    DISTANCE_THRESHOLD = 100
+    DISTANCE_THRESHOLD = 140
     ROBOT_DIAMETER = 0.074  # m
     SENSORS_ORIENTATION = {
         "ps0": 1.27,

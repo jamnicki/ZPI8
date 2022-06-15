@@ -141,10 +141,24 @@ def run(robot, timestep):
         obstacle_pixels = set()
         for sensor, value in distance_sensors_values.items():
             val = epuck_to_meters(value)
+
+            if theta_deg >= 0:
+                deg = theta_deg
+            else:
+                deg = 360 + theta_deg
+            
             deg = robot_rotation[-1]
-            sens_orient = SENSORS_ORIENTATION[sensor]
+
+            sens_orient = math.degrees(SENSORS_ORIENTATION[sensor])
+
+            # x_obstacle = robot_x + (val * np.cos(sens_orient + deg)) + sens_rel_pos[0]
+            # y_obstacle = robot_y + (val * np.sin(sens_orient + deg)) + sens_rel_pos[1]
+
             x_obstacle = robot_x + (val * np.cos(sens_orient + deg))
             y_obstacle = robot_y + (val * np.sin(sens_orient + deg))
+
+            # print(f"{sensor} >> {robot_x=:.2f} {robot_y=:.2f} {x_obstacle=:.2f} {y_obstacle=:.2f} {value > DISTANCE_THRESHOLD}")
+
             ob_px, ob_py = get_target_pixel(
                 x_obstacle, y_obstacle, pixel_size, mid_index
             )
