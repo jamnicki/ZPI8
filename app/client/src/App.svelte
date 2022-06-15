@@ -49,15 +49,14 @@
 
 <style>
   main {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
+    display: grid;
+    grid-auto-columns: 1fr;
     padding: 1rem;
     font-size: 1.2rem;
     text-align: center;
   }
   .map {
-    width: 100%;
+    max-width: 500px;
   }
   .robots {
     display: flex;

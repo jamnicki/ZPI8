@@ -1,75 +1,53 @@
 <script>
-  import { onMount } from 'svelte';
+  import Dygraph from 'dygraphs';
 
-  import Chart from 'chart.js/auto';
-  import 'chartjs-adapter-date-fns';
-  import { pl } from 'date-fns/locale';
+  import { logAmount, testTimes, colors } from './config.js';
 
-  import { colors } from './config.js';
-
-  let canvas;
   let chart;
 
-  function newChart(canvas) {
-    return new Chart(canvas, {
-      type: 'line',
-      data: {
-        datasets: [
-          {
-            label: 'Nieznane',
-            backgroundColor: `rgba(${colors.white.toString()})`,
-            borderColor: `rgba(${colors.white.toString()})`,
-            showLine: true,
-          },
-          {
-            label: 'Odwiedzone',
-            backgroundColor: `rgba(${colors.green.toString()})`,
-            borderColor: `rgba(${colors.green.toString()})`,
-            showLine: true,
-          },
-          {
-            label: 'Przeszkoda',
-            backgroundColor: `rgba(${colors.black.toString()})`,
-            borderColor: `rgba(${colors.black.toString()})`,
-            showLine: true,
-          },
-          {
-            label: 'Odkryte',
-            backgroundColor: `rgba(${colors.blue.toString()})`,
-            borderColor: `rgba(${colors.blue.toString()})`,
-            showLine: true,
-          },
-        ],
-      },
-      options: {
-        fill: false,
-        interaction: { intersect: false },
-        radius: 2,
-        tension: 0,
-        spanGaps: true,
-        plugins: { legend: { position: 'bottom' } },
-        scales: {
-          x: {
-            type: 'time',
-            adapters: { date: { locale: pl } },
-          },
-          y: { min: -10, max: 110, grid: { drawOnChartArea: false }, type: 'linear' },
-        },
-      },
+  const head = ['Date', 'Unknown', 'Visited', 'Wall', 'Explored'];
+  let data = [];
+
+  let startTime = new Date();
+
+  let values = [];
+  let now;
+
+  export function plot(states) {
+    now = new Date();
+    data.push([now, Number(states.unknown), Number(states.visited), Number(states.wall), Number(states.explored)]);
+    const first = data[0][0].getTime();
+    const last = data[data.length - 1][0].getTime();
+    const diff = last - first;
+    const seconds = diff / 1000;
+    const minutes = seconds / 60;
+    for (const time of testTimes) {
+      if (minutes > time) {
+        values.push(states);
+      }
+    }
+    new Dygraph(chart, data, {
+      labels: head,
+      colors: [
+        `rgba(${colors.red.toString()})`,
+        `rgba(${colors.green.toString()})`,
+        `rgba(${colors.black.toString()})`,
+        `rgba(${colors.blue.toString()})`,
+      ],
+      legend: 'always',
+      valueRange: [-10, 110],
     });
   }
-
-  export function plot(states, time) {
-    chart.data.datasets[0].data = [...chart.data.datasets[0].data, { x: time, y: states.unknown }];
-    chart.data.datasets[1].data = [...chart.data.datasets[1].data, { x: time, y: states.visited }];
-    chart.data.datasets[2].data = [...chart.data.datasets[2].data, { x: time, y: states.wall }];
-    chart.data.datasets[3].data = [...chart.data.datasets[3].data, { x: time, y: states.explored }];
-    chart.update();
-  }
-
-  onMount(() => {
-    chart = newChart(canvas);
-  });
 </script>
 
-<canvas width="100" height="100" bind:this={canvas} />
+<div class="graph" bind:this={chart} />
+
+{#if now}
+  <div class="time">{(now.getTime() - startTime.getTime()) / 1000}sec</div>
+{/if}
+
+<style>
+  .time {
+    font-size: 2rem;
+  }
+</style>

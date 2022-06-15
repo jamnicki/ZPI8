@@ -69,8 +69,7 @@
 
   onMount(() => {
     const interval = setInterval(() => {
-      time = Date.now();
-      chart.plot(statesPrcnt, time);
+      chart.plot(statesPrcnt);
     }, logInterval);
     return () => clearInterval(interval);
   });
@@ -81,22 +80,22 @@
   <br />
   <div class="info">
     <div class="legend">
-        <div>
-          <div class="color" style="background-color: rgba({colors.white.toString()})" />
-          Nieznane:<br />{statesPrcnt.unknown}%
-        </div>
-        <div>
-          <div class="color" style="background-color: rgba({colors.green.toString()})" />
-          Odwiedzone:<br />{statesPrcnt.visited}%
-        </div>
-        <div>
-          <div class="color" style="background-color: rgba({colors.blue.toString()})" />
-          Odkryte:<br />{statesPrcnt.explored}%
-        </div>
-        <div>
-          <div class="color" style="background-color: rgba({colors.black.toString()})" />
-          Przeszkoda:<br />{statesPrcnt.wall}%
-        </div>
+      <div>
+        <div class="color" style="background-color: rgba({colors.white.toString()})" />
+        Nieznane:<br />{statesPrcnt.unknown}%
+      </div>
+      <div>
+        <div class="color" style="background-color: rgba({colors.green.toString()})" />
+        Odwiedzone:<br />{statesPrcnt.visited}%
+      </div>
+      <div>
+        <div class="color" style="background-color: rgba({colors.blue.toString()})" />
+        Odkryte:<br />{statesPrcnt.explored}%
+      </div>
+      <div>
+        <div class="color" style="background-color: rgba({colors.black.toString()})" />
+        Przeszkoda:<br />{statesPrcnt.wall}%
+      </div>
     </div>
   </div>
   <br />
